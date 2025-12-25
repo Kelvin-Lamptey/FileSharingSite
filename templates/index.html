@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>File Sharing</title>
+  <style>
+    body{font-family:Inter, system-ui, -apple-system, Roboto, Arial, sans-serif;max-width:980px;margin:2rem auto;padding:0 1rem;color:#1a1a1a}
+    table{width:100%;border-collapse:collapse;margin-top:1rem}
+    th,td{padding:.5rem;border-bottom:1px solid #eee;text-align:left}
+    .addr{padding:.5rem;background:#f6f9f7;border-left:4px solid #2a9d8f;margin-bottom:1rem}
+    .btn{display:inline-block;padding:.35rem .7rem;background:#2a9d8f;color:white;border-radius:5px;text-decoration:none}
+    a{text-decoration:none;color:#0b6b5f}
+  </style>
+</head>
+<body>
+  <h1>Files</h1>
+
+  <div class="addr">
+    <strong>Local:</strong> <a href="{{ local_addr }}">{{ local_addr }}</a><br>
+    <strong>Network:</strong> <a href="{{ network_addr }}">{{ network_addr }}</a>
+  </div>
+
+  {% if req_path %}
+  <p><a href="{{ url_for('index') }}">⬅ Back to root</a> / {{ req_path }}</p>
+  {% endif %}
+
+  <table>
+    <thead><tr><th>Name</th><th style="width:140px">Size</th><th style="width:110px"></th></tr></thead>
+    <tbody>
+      {% for e in entries %}
+      <tr>
+        <td>
+          {% if not e.is_file %}
+            <a href="{{ e.url }}">{{ e.name }}/</a>
+          {% else %}
+            {{ e.name }}
+          {% endif %}
+        </td>
+        <td>{% if e.size is not none %}{{ e.size|human_size }}{% endif %}</td>
+        <td>
+          {% if e.is_file %}
+            <a class="btn" href="{{ e.url }}">Download</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</body>
+</html>
